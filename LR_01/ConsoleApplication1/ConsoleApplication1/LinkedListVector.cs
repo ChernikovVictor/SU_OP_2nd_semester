@@ -1,10 +1,12 @@
-using System;
+﻿using System;
 using System.Collections;
 
 namespace ConsoleApplication1
 {
+    [Serializable]
     public class LinkedListVector : IVector, IComparable, ICloneable
     {
+        [Serializable]
         private class Node
         {
             public double value;
@@ -23,7 +25,7 @@ namespace ConsoleApplication1
                 head = p;
             }
         }
-        
+
         public LinkedListVector(int n)
         {
             if (n != 0)
@@ -130,7 +132,7 @@ namespace ConsoleApplication1
             }
             return st;
         }
-        
+
         public override bool Equals(object obj)
         {
             IVector v = obj as IVector;
@@ -150,7 +152,7 @@ namespace ConsoleApplication1
         {
             return this.ToString().GetHashCode();
         }
-        
+
         public int CompareTo(object obj)
         {
             IVector v = obj as IVector;
@@ -171,8 +173,8 @@ namespace ConsoleApplication1
         {
             int IComparer.Compare(object obj1, object obj2)
             {
-                IVector v1 = (IVector) obj1;
-                IVector v2 = (IVector) obj2;
+                IVector v1 = (IVector)obj1;
+                IVector v2 = (IVector)obj2;
                 if (v1.GetNorm() > v2.GetNorm())
                     return 1;
                 if (v1.GetNorm() < v2.GetNorm())
@@ -180,7 +182,7 @@ namespace ConsoleApplication1
                 return 0;
             }
         }
-        
+
         public object Clone()
         {
             LinkedListVector clone = new LinkedListVector(this.Length);
