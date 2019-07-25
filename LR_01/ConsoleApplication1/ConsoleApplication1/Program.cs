@@ -6,12 +6,12 @@ namespace ConsoleApplication1
     {
         public static void Main(string[] args)
         {
-            Console.Write("ЛР-02. Черников В.Е. гр. № 6113. \n" +
-                          "Программа для работы с векторами и односвязными списками списками \n" +
+            Console.Write("ЛР-04. Черников В.Е. гр. № 6113. \n" +
+                          "Программа для работы с векторами и односвязными списками, реализующими один интерфейс \n" +
                           "Часть 1. Вектора \n" +
-                          "Введите размер вектора: ");
+                          "Введите размерность вектора: ");
             int n;
-            ArrayVector arr;
+            IVector arr;
             try
             {
                 n = Int32.Parse(Console.ReadLine());
@@ -46,7 +46,7 @@ namespace ConsoleApplication1
                     switch (buf)
                     {
                         case "1":
-                            Console.Write("Введите размер вектора: ");
+                            Console.Write("Введите размерность вектора: ");
                             ArrayVector v1 = new ArrayVector(Int32.Parse(Console.ReadLine()));
                             Console.WriteLine(arr.ToString() + "\n" +
                                               "+ \n" +
@@ -58,7 +58,7 @@ namespace ConsoleApplication1
                             Console.ReadLine();
                             break;
                         case "2":
-                            Console.Write("Введите размер вектора: ");
+                            Console.Write("Введите размерность вектора: ");
                             ArrayVector v2 = new ArrayVector(Int32.Parse(Console.ReadLine()));
                             Console.WriteLine(arr.ToString() + "\n" +
                                               "x \n" +
@@ -86,28 +86,26 @@ namespace ConsoleApplication1
                 return;
             }
 
-            // task 2
+            // Работа со списками
             Console.Write("Часть 2. Списки \n" +
-                          "Введите размер списка: ");
+                          "Введите размерность списка: ");
             n = Int32.Parse(Console.ReadLine());
-            LinkedListVector list;
             if (n < 0)
             {
-                Console.WriteLine("Отрицательный размер. Список по умолчанию: 5 элементов \n" +
+                Console.WriteLine("Отрицательная размерность. Список по умолчанию: 5 элементов \n" +
                                   "Нажмите Enter...");
                 Console.ReadLine();
-                list = new LinkedListVector();
+                arr = new LinkedListVector();
             }
             else
             {
-                list = new LinkedListVector(n);
+                arr = new LinkedListVector(n);
             }
-
             Console.WriteLine("Введите элементы списка");
             try
             {
                 for (int i = 0; i < n; i++)
-                    list[i] = double.Parse(Console.ReadLine());
+                    arr[i] = double.Parse(Console.ReadLine());
             }
             catch (FormatException e)
             {
@@ -117,13 +115,12 @@ namespace ConsoleApplication1
                 return;
             }
 
-            buf = "1";
             while (buf != "2")
             {
                 Console.Clear();
-                Console.WriteLine("Список: " + list.ToString() + "\n" +
-                                  "Модуль вектора: " + list.GetNorm() + "\n" +
-                                  "Число координат: " + list.Length + "\n" +
+                Console.WriteLine("Список: " + arr.ToString() + "\n" +
+                                  "Модуль вектора: " + Vectors.GetNorm(arr) + "\n" +
+                                  "Число координат: " + arr.Length + "\n" +
                                   "1. Изменить значение элемента списка \n" +
                                   "2. Выход \n" +
                                   "Введите номер: ");
@@ -138,7 +135,7 @@ namespace ConsoleApplication1
                             Console.WriteLine("Введите новое значение");
                             double x = double.Parse(Console.ReadLine());
                             i--;
-                            list[i] = x;
+                            arr[i] = x;
                         }
                         catch (FormatException e)
                         {
