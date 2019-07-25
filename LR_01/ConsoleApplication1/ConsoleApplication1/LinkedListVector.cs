@@ -1,8 +1,9 @@
 using System;
+using System.Collections;
 
 namespace ConsoleApplication1
 {
-    public class LinkedListVector : IVector
+    public class LinkedListVector : IVector, IComparable, ICloneable
     {
         private class Node
         {
@@ -128,6 +129,66 @@ namespace ConsoleApplication1
                 st = st + ' ' + p.value.ToString();
             }
             return st;
+        }
+        
+        public override bool Equals(object obj)
+        {
+            IVector v = obj as IVector;
+            if (v == null || v.Length != this.Length)
+                return false;
+            for (int i = 0; i < v.Length; i++)
+            {
+                if (Math.Abs(v[i] - this[i]) > 1e-5)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ToString().GetHashCode();
+        }
+        
+        public int CompareTo(object obj)
+        {
+            IVector v = obj as IVector;
+            if (v == null)
+            {
+                Console.Write("Невозможно сравнить\nPress Enter...");
+                Console.ReadLine();
+                throw new Exception();
+            }
+            if (this.Length > v.Length)
+                return 1;
+            if (this.Length < v.Length)
+                return -1;
+            return 0;
+        }
+
+        public class SortByNorm : IComparer
+        {
+            int IComparer.Compare(object obj1, object obj2)
+            {
+                IVector v1 = (IVector) obj1;
+                IVector v2 = (IVector) obj2;
+                if (v1.GetNorm() > v2.GetNorm())
+                    return 1;
+                if (v1.GetNorm() < v2.GetNorm())
+                    return -1;
+                return 0;
+            }
+        }
+        
+        public object Clone()
+        {
+            LinkedListVector clone = new LinkedListVector(this.Length);
+            for (int i = 0; i < this.Length; i++)
+            {
+                clone[i] = this[i];
+            }
+            return clone;
         }
     }
 }

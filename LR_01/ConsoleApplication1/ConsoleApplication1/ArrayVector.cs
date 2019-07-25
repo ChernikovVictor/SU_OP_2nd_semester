@@ -1,7 +1,7 @@
 using System;
 namespace ConsoleApplication1
 {
-    public class ArrayVector : IVector
+    public class ArrayVector : IVector, IComparable, ICloneable
     {
         private double[] a;
 
@@ -85,6 +85,49 @@ namespace ConsoleApplication1
             for (int i = 0; i < a.Length; i++)
                 st = st + ' ' + a[i];
             return st;
+        }
+
+        public override bool Equals(object obj)
+        {
+            IVector v = obj as IVector;
+            if (v == null || v.Length != this.Length)
+                return false;
+            for (int i = 0; i < v.Length; i++)
+            {
+                if (Math.Abs(v[i] - this[i]) > 1e-5)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.ToString().GetHashCode();
+        }
+
+        public int CompareTo(object obj)
+        {
+            IVector v = obj as IVector;
+            if (v == null)
+            {
+                Console.Write("Невозможно сравнить\nPress Enter...");
+                Console.ReadLine();
+                throw new Exception();
+            }
+            if (this.Length > v.Length)
+                return 1;
+            if (this.Length < v.Length)
+                return -1;
+            return 0;
+        }
+
+        public object Clone()
+        {
+            ArrayVector clone = new ArrayVector(this.Length);
+            clone.a = (double[]) a.Clone();
+            return clone;
         }
     }
 }

@@ -6,70 +6,86 @@ namespace ConsoleApplication1
     {
         public static void Main(string[] args)
         {
-            Console.Write("ЛР-04. Черников В.Е. гр. № 6113. \n" +
-                          "Программа для работы с векторами и односвязными списками, реализующими один интерфейс \n" +
-                          "Часть 1. Вектора \n" +
-                          "Введите размерность вектора: ");
-            int n;
-            IVector arr;
-            try
+            Console.Write("ЛР-05. Черников В.Е. гр. № 6113. \n" +
+                          "Программа для работы с векторами и односвязными списками, реализующими несколько стандарнтых интерфейсов \n" +
+                          "Введите колличество векторов в массиве: ");
+            int n = Int32.Parse(Console.ReadLine());
+            IVector[] arr = new IVector[n];
+            for (int i = 0; i < n; i++)
             {
-                n = Int32.Parse(Console.ReadLine());
-                arr = new ArrayVector(n);
-                Console.WriteLine("Введите элементы вектора");
-                for (int i = 0; i < n; i++)
-                    arr[i] = Double.Parse(Console.ReadLine());
+                Console.WriteLine("Создание {0}-го вектора:\n" +
+                                  "Выберете: 1. Вектор    2. Список", i + 1);
+                int type = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Введите размерность вектора: ");
+                int size = Int32.Parse(Console.ReadLine());
+                IVector x;
+                if (type == 1)
+                    x = new ArrayVector(size);
+                else
+                    x = new LinkedListVector(size);
+                Console.WriteLine("Введите элементы вектора: ");
+                try
+                {
+                    for (int j = 0; j < size; j++)
+                        x[j] = Double.Parse(Console.ReadLine());
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Неверный формат записи\nPress Enter...");
+                    Console.ReadLine();
+                    return;
+                }
+                arr[i] = x;
             }
-            catch (FormatException e)
-            {
-                Console.WriteLine(e);
-                Console.WriteLine("Press Enter...");
-                Console.ReadLine();
-                return;
-            }
-            catch (Exception) { return; }
 
-            string buf = "1";
+            // Menu
             try
             {
-                while (buf != "3")
+                int stop = 0;
+                while (stop == 0)
                 {
                     Console.Clear();
-                    Console.Write("Вектор: " + arr.ToString() + "\n" +
-                                  "Модуль вектора: " + Vectors.GetNorm(arr) + "\n" +
-                                  "Кол-во координат вектора: " + arr.Length + "\n" +
-                                  "1. Прибавить к вектору другой вектор \n" +
-                                  "2. Скалярно умножить вектор на другой вектор \n" +
-                                  "3. Выход \n" +
+                    IVector minVector = arr[0], maxVector = arr[0];
+                    for (int i = 0; i < n; i++)
+                    {
+                        if (arr[i].CompareTo(maxVector) > 0)
+                            maxVector = arr[i];
+                        if (arr[i].CompareTo(minVector) < 0)
+                            minVector = arr[i];
+                        Console.WriteLine(arr[i].ToString());
+                    }
+                    Console.Write("Самый маленький вектор: " + minVector.ToString() + "\n" + 
+                                  "Самый большой вектор: " + maxVector.ToString() + "\n" + 
+                                  "1. Cортировать по возрастанию модулей \n" +
+                                  "2. Сортировать по кол-ву координат \n" +
+                                  "3. Клонировать вектор \n" + 
+                                  "0. Выход \n" +
                                   "Выберете действие: ");
-                    buf = Console.ReadLine();
+                    string buf = Console.ReadLine();
                     switch (buf)
                     {
                         case "1":
-                            Console.Write("Введите размерность вектора: ");
-                            ArrayVector v1 = new ArrayVector(Int32.Parse(Console.ReadLine()));
-                            Console.WriteLine(arr.ToString() + "\n" +
-                                              "+ \n" +
-                                              v1.ToString() + "\n" +
-                                              "=");
-                            arr = Vectors.Sum(arr, v1);
-                            Console.WriteLine(arr.ToString() + "\n" +
-                                              "Нажмите Enter...");
-                            Console.ReadLine();
+                            Array.Sort(arr, new LinkedListVector.SortByNorm());
                             break;
                         case "2":
-                            Console.Write("Введите размерность вектора: ");
-                            ArrayVector v2 = new ArrayVector(Int32.Parse(Console.ReadLine()));
-                            Console.WriteLine(arr.ToString() + "\n" +
-                                              "x \n" +
-                                              v2.ToString() + "\n" +
-                                              "=");
-                            Console.WriteLine(Vectors.Scalar(arr, v2) + "\n" +
+                            Array.Sort(arr);
+                            break;
+                        case "3":
+                            Console.Write("Выберете номер массива: ");
+                            int j = Int32.Parse(Console.ReadLine());
+                            j--;
+                            IVector clone = (IVector)arr[j].Clone();
+                            for (int i = 0; i < clone.Length; i++)
+                                clone[i] = 5;
+                            Console.WriteLine("Заменили в клоне все элементы на значение: 5 \n" +
+                                              clone.ToString() + "\n" +
+                                              "Исходный вектор не изменился: \n" +
+                                              arr[j].ToString() + "\n" +
                                               "Нажмите Enter...");
                             Console.ReadLine();
                             break;
-                        case "3":
-                            Console.Clear();
+                        case "0":
+                            stop = 1;
                             break;
                         default:
                             Console.WriteLine("Неправильный символ \n" +
@@ -84,76 +100,6 @@ namespace ConsoleApplication1
                 Console.WriteLine("Ошибка исполнения\nPress Enter...");
                 Console.ReadLine();
                 return;
-            }
-
-            // Работа со списками
-            Console.Write("Часть 2. Списки \n" +
-                          "Введите размерность списка: ");
-            n = Int32.Parse(Console.ReadLine());
-            if (n < 0)
-            {
-                Console.WriteLine("Отрицательная размерность. Список по умолчанию: 5 элементов \n" +
-                                  "Нажмите Enter...");
-                Console.ReadLine();
-                arr = new LinkedListVector();
-            }
-            else
-            {
-                arr = new LinkedListVector(n);
-            }
-            Console.WriteLine("Введите элементы списка");
-            try
-            {
-                for (int i = 0; i < n; i++)
-                    arr[i] = double.Parse(Console.ReadLine());
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine(e);
-                Console.WriteLine("Press Enter...");
-                Console.ReadLine();
-                return;
-            }
-
-            while (buf != "2")
-            {
-                Console.Clear();
-                Console.WriteLine("Список: " + arr.ToString() + "\n" +
-                                  "Модуль вектора: " + Vectors.GetNorm(arr) + "\n" +
-                                  "Число координат: " + arr.Length + "\n" +
-                                  "1. Изменить значение элемента списка \n" +
-                                  "2. Выход \n" +
-                                  "Введите номер: ");
-                buf = Console.ReadLine();
-                switch (buf)
-                {
-                    case "1":
-                        try
-                        {
-                            Console.WriteLine("Введите индекс");
-                            int i = Int32.Parse(Console.ReadLine());
-                            Console.WriteLine("Введите новое значение");
-                            double x = double.Parse(Console.ReadLine());
-                            i--;
-                            arr[i] = x;
-                        }
-                        catch (FormatException e)
-                        {
-                            Console.WriteLine(e);
-                            Console.WriteLine("Press Enter...");
-                            Console.ReadLine();
-                            return;
-                        }
-                        catch (Exception) { return; }
-                        break;
-
-                    case "2":
-                        break;
-                    default:
-                        Console.WriteLine("Неверный номер\nPress Enter...");
-                        Console.ReadLine();
-                        break;
-                }
             }
         }
     }
