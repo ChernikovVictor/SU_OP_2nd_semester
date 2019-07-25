@@ -353,3 +353,5 @@ MigrationBackup/
 *.sln
 *AssemblyInfo.cs
 *.config
+*.xml
+*.iml
