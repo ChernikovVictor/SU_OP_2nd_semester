@@ -6,43 +6,46 @@ namespace ConsoleApplication1
     {
         public static void Main(string[] args)
         {
-            Console.Write("ЛР-01. Черников В.Е. гр. № 6113. \n" +
-                              "Программа для создания и обработки вектора чисел \n" +
-                              "Введите размер вектора: ");
-            int n = Int32.Parse(Console.ReadLine());
-            ArrayVector arr = new ArrayVector(n);
-            Console.WriteLine("Введите элементы вектора");
-            for (int i = 0; i < n; i++)
-                arr.SetElement(i, Int32.Parse(Console.ReadLine()));
+            Console.Write("ЛР-02. Черников В.Е. гр. № 6113. \n" +
+                          "Программа для работы с векторами и односвязными списками списками \n" +
+                          "Часть 1. Вектора \n" +
+                          "Введите размер вектора: ");
+            int n;
+            ArrayVector arr;
             try
             {
-                int stop = 0;
-                while (stop == 0)
+                n = Int32.Parse(Console.ReadLine());
+                arr = new ArrayVector(n);
+                Console.WriteLine("Введите элементы вектора");
+                for (int i = 0; i < n; i++)
+                    arr[i] = Double.Parse(Console.ReadLine());
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("Press Enter...");
+                Console.ReadLine();
+                return;
+            }
+            catch (Exception) { return; }
+
+            string buf = "1";
+            try
+            {
+                while (buf != "3")
                 {
                     Console.Clear();
                     Console.Write("Вектор: " + arr.ToString() + "\n" +
                                   "Модуль вектора: " + Vectors.GetNorm(arr) + "\n" +
-                                  "SumPositivesFromChetIndex: " + arr.SumPositivesFromChetIndex() + "\n" +
-                                  "SumLessFromNechetIndex: " + arr.SumLessFromNechetIndex() + "\n" +
-                                  "MulChet: " + arr.MulChet() + "\n" +
-                                  "MulNechet: " + arr.MulNechet() + "\n" +
-                                  "1. Сортировать вектор по возрастанию \n" +
-                                  "2. Сортировать вектор по убыванию \n" +
-                                  "3. Прибавить к вектору другой вектор \n" +
-                                  "4. Скалярно умножить вектор на другой вектор \n" +
-                                  "5. Умножить вектор на число \n" +
-                                  "6. Выход \n" +
+                                  "Кол-во координат вектора: " + arr.Length + "\n" +
+                                  "1. Прибавить к вектору другой вектор \n" +
+                                  "2. Скалярно умножить вектор на другой вектор \n" +
+                                  "3. Выход \n" +
                                   "Выберете действие: ");
-                    string buf = Console.ReadLine();
-                    switch (buf) 
+                    buf = Console.ReadLine();
+                    switch (buf)
                     {
-                        case "1": 
-                            arr.SortUp();
-                            break;
-                        case "2": 
-                            arr.SortDown();
-                            break;
-                        case "3":
+                        case "1":
                             Console.Write("Введите размер вектора: ");
                             ArrayVector v1 = new ArrayVector(Int32.Parse(Console.ReadLine()));
                             Console.WriteLine(arr.ToString() + "\n" +
@@ -54,7 +57,7 @@ namespace ConsoleApplication1
                                               "Нажмите Enter...");
                             Console.ReadLine();
                             break;
-                        case "4":
+                        case "2":
                             Console.Write("Введите размер вектора: ");
                             ArrayVector v2 = new ArrayVector(Int32.Parse(Console.ReadLine()));
                             Console.WriteLine(arr.ToString() + "\n" +
@@ -65,13 +68,8 @@ namespace ConsoleApplication1
                                               "Нажмите Enter...");
                             Console.ReadLine();
                             break;
-                        case "5":
-                            Console.Write("Введите число: ");
-                            int x = Int32.Parse(Console.ReadLine());
-                            arr = Vectors.NumberMul(arr, x);
-                            break;
-                        case "6":
-                            stop = 1;
+                        case "3":
+                            Console.Clear();
                             break;
                         default:
                             Console.WriteLine("Неправильный символ \n" +
@@ -83,11 +81,83 @@ namespace ConsoleApplication1
             }
             catch (Exception)
             {
-                Console.WriteLine("Ошибка исполнения");
+                Console.WriteLine("Ошибка исполнения\nPress Enter...");
+                Console.ReadLine();
+                return;
+            }
+
+            // task 2
+            Console.Write("Часть 2. Списки \n" +
+                          "Введите размер списка: ");
+            n = Int32.Parse(Console.ReadLine());
+            LinkedListVector list;
+            if (n < 0)
+            {
+                Console.WriteLine("Отрицательный размер. Список по умолчанию: 5 элементов \n" +
+                                  "Нажмите Enter...");
+                Console.ReadLine();
+                list = new LinkedListVector();
+            }
+            else
+            {
+                list = new LinkedListVector(n);
+            }
+
+            Console.WriteLine("Введите элементы списка");
+            try
+            {
+                for (int i = 0; i < n; i++)
+                    list[i] = double.Parse(Console.ReadLine());
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e);
                 Console.WriteLine("Press Enter...");
                 Console.ReadLine();
+                return;
             }
-            
+
+            buf = "1";
+            while (buf != "2")
+            {
+                Console.Clear();
+                Console.WriteLine("Список: " + list.ToString() + "\n" +
+                                  "Модуль вектора: " + list.GetNorm() + "\n" +
+                                  "Число координат: " + list.Length + "\n" +
+                                  "1. Изменить значение элемента списка \n" +
+                                  "2. Выход \n" +
+                                  "Введите номер: ");
+                buf = Console.ReadLine();
+                switch (buf)
+                {
+                    case "1":
+                        try
+                        {
+                            Console.WriteLine("Введите индекс");
+                            int i = Int32.Parse(Console.ReadLine());
+                            Console.WriteLine("Введите новое значение");
+                            double x = double.Parse(Console.ReadLine());
+                            i--;
+                            list[i] = x;
+                        }
+                        catch (FormatException e)
+                        {
+                            Console.WriteLine(e);
+                            Console.WriteLine("Press Enter...");
+                            Console.ReadLine();
+                            return;
+                        }
+                        catch (Exception) { return; }
+                        break;
+
+                    case "2":
+                        break;
+                    default:
+                        Console.WriteLine("Неверный номер\nPress Enter...");
+                        Console.ReadLine();
+                        break;
+                }
+            }
         }
     }
 }
