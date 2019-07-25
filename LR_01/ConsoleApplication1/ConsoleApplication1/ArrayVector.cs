@@ -1,7 +1,7 @@
 using System;
 namespace ConsoleApplication1
 {
-    public class ArrayVector
+    public class ArrayVector : IVector
     {
         private double[] a;
 
@@ -81,9 +81,9 @@ namespace ConsoleApplication1
         
         public override string ToString()
         {
-            string st = "";
+            string st = a.Length.ToString();
             for (int i = 0; i < a.Length; i++)
-                st = st + ' ' + a[i].ToString();
+                st = st + ' ' + a[i];
             return st;
         }
     }

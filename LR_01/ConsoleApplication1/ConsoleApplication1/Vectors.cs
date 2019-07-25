@@ -3,9 +3,27 @@ namespace ConsoleApplication1
 {
     public class Vectors
     {
-        public static ArrayVector Sum(ArrayVector x, ArrayVector y)
+        public static IVector Sum(IVector x, IVector y)
         {
-            ArrayVector ans = new ArrayVector(Math.Max(x.Length, y.Length));
+            
+            IVector ans;
+            if (x is ArrayVector)
+            {
+                ans = new ArrayVector(Math.Max(x.Length, y.Length));
+            }
+            else
+            {
+                if (x is LinkedListVector)
+                {
+                    ans = new LinkedListVector(Math.Max(x.Length, y.Length));
+                }
+                else
+                {
+                    Console.WriteLine("Операция неприменима к объектам данных типов\nPress Enter...");
+                    Console.ReadLine();
+                    throw new Exception();
+                }
+            }
             try
             {
                 for (int i = 0; i < ans.Length; i++)
@@ -20,7 +38,7 @@ namespace ConsoleApplication1
             }
         }
 
-        public static double Scalar(ArrayVector x, ArrayVector y)
+        public static double Scalar(IVector x, IVector y)
         {
             double ans = 0;
             try
@@ -37,7 +55,7 @@ namespace ConsoleApplication1
             }
         }
 
-        public static double GetNorm(ArrayVector x)
+        public static double GetNorm(IVector x)
         {
             return x.GetNorm();
         }

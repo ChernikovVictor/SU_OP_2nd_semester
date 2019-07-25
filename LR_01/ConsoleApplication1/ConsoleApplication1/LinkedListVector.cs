@@ -2,7 +2,7 @@ using System;
 
 namespace ConsoleApplication1
 {
-    public class LinkedListVector
+    public class LinkedListVector : IVector
     {
         private class Node
         {
@@ -119,9 +119,9 @@ namespace ConsoleApplication1
         public override string ToString()
         {
             if (head == null)
-                return "";
+                return "0";
             Node p = head;
-            string st = p.value.ToString();
+            string st = this.Length.ToString() + ' ' + p.value.ToString();
             while (p.next != null)
             {
                 p = p.next;
