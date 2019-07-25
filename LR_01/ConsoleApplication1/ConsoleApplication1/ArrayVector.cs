@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 namespace ConsoleApplication1
 {
-    [Serializable]
     public class ArrayVector : IVector, IComparable, ICloneable
     {
         private double[] a;
@@ -79,7 +78,7 @@ namespace ConsoleApplication1
             }
             return Math.Sqrt(res);
         }
-
+        
         public override string ToString()
         {
             string st = a.Length.ToString();
