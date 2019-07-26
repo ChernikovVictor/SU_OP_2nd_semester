@@ -355,3 +355,5 @@ MigrationBackup/
 *.config
 *.xml
 *.iml
+*.resx
+Properties/
